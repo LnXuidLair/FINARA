@@ -14,7 +14,7 @@ class CreateorangtuaTable extends Migration
     public function up()
     {
         Schema::create('orangtua', function (Blueprint $table) {
-            $table->increments('id');
+            $table->id();
             $table->string('nik',16)->unique();
             $table->string('nama_ortu');
             $table->string('pekerjaan');
