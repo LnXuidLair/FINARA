@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('penggajian', function (Blueprint $table) {
-            $table->increments('id');
+            $table->id();
             $table->foreignId('id_pegawai')->nullable()->constrained('pegawai')->onDelete('set null');
             $table->string('periode');
             $table->integer('jumlah_hari');
