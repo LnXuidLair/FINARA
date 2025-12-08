@@ -14,7 +14,7 @@ class CreateCoaTable extends Migration
     public function up()
     {
         Schema::create('coa', function (Blueprint $table) {
-            $table->increments('id');
+            $table->id();
             $table->string('header_akun');
             $table->string('kode_akun',5)->unique();
             $table->string('nama_akun')->unique();
