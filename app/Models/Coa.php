@@ -4,19 +4,24 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\DB;
 
 class Coa extends Model
 {
     use HasFactory;
 
-    // Nama tabel di database
     protected $table = 'coa';
 
-    // Kolom yang dapat diisi (mass assignable)
     protected $fillable = [
+        'header_akun',
         'kode_akun',
         'nama_akun',
     ];
 
+    /**
+     * Relasi ke JurnalDetail
+     */
+    public function jurnalDetail()
+    {
+        return $this->hasMany(JurnalDetail::class, 'coa_id');
+    }
 }
