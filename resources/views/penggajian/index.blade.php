@@ -2,8 +2,8 @@
     <div class="container mt-3">
         <div class="card shadow">
             <div class="card-header d-flex justify-content-between align-items-center">
-                <h5 class="mb-0">Daftar Produk</h5>
-                <a href="{{ route('produk.create') }}" class="btn btn-primary">Tambah Produk</a>
+                <h5 class="mb-0">Daftar Beban</h5>
+                <a href="{{ route('beban.create') }}" class="btn btn-primary">Tambah Beban</a>
             </div>
             <div class="card-body">
                 @if(session('success'))
@@ -13,23 +13,23 @@
                     <table class="table table-bordered table-striped">
                         <thead>
                             <tr>
-                                <th>Kode Produk</th>
-                                <th>Nama Produk</th>
-                                <th>Harga</th>
-                                <th>Jumlah Stok</th>
+                                <th>Kode Beban</th>
+                                <th>Tanggal</th>
+                                <th>Keterangan</th>
+                                <th>Nominal</th>
                                 <th>Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @forelse ($produk as $item)
+                            @forelse ($beban as $item)
                                 <tr>
-                                    <td>{{ $item->kode_produk}}</td>
-                                    <td>{{ $item->nama_produk }}</td>
-                                    <td>{{ $item->harga}}</td>
-                                    <td>{{ $item->jumlah_stok }}</td>
+                                    <td>{{ $item->kode_beban}}</td>
+                                    <td>{{ $item->tanggal }}</td>
+                                    <td>{{ $item->keterangan }}</td>
+                                    <td>{{ $item->nominal }}</td>
                                     <td>
-                                        <a href="{{ route('produk.edit', $item->id) }}" class="btn btn-sm btn-warning">Edit</a>
-                                        <form action="{{ route('produk.destroy', $item->id) }}" method="POST" class="d-inline">
+                                        <a href="{{ route('beban.edit', $item->id) }}" class="btn btn-sm btn-warning">Edit</a>
+                                        <form action="{{ route('beban.destroy', $item->id) }}" method="POST" class="d-inline">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Yakin ingin menghapus data ini?')">Hapus</button>
@@ -38,7 +38,7 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="5" class="text-center">Tidak ada data produk.</td>
+                                    <td colspan="5" class="text-center">Tidak ada data bahan baku.</td>
                                 </tr>
                             @endforelse
                         </tbody>

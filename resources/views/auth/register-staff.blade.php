@@ -4,7 +4,7 @@
     Activate Staff Account
 @endsection
 @section('content')
-<form method="POST" action="{{ route('register.staff') }}">
+<form method="POST" action="{{ route('register.staff.post') }}">
     @csrf
     <h3 class="text-3xl font-bold text-center mb-6 text-[#3700FF]">Activate</h3>
     <div class="mb-4">
