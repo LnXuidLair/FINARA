@@ -1,0 +1,56 @@
+/* Custom Sidebar Styles */
+.sidebar {
+    background: #e6d7ff !important; /* Light purple background */
+}
+
+.sidebar .nano-content {
+    background: #e6d7ff !important;
+}
+
+.sidebar .nano-content > ul {
+    background: #e6d7ff !important;
+}
+
+.sidebar .nano-content > ul li {
+    background: #e6d7ff !important;
+}
+
+.sidebar .nano-content > ul li > a {
+    color: #2c3e50 !important; /* Dark text for readability */
+    background: #e6d7ff !important;
+}
+
+.sidebar .nano-content > ul li > a:hover,
+.sidebar .nano-content > ul li > a:focus {
+    background: #d4bfff !important; /* Darker purple on hover */
+    color: #1a252f !important;
+}
+
+.sidebar .nano-content > ul li.label {
+    background: #c9a9ff !important; /* Slightly darker for labels */
+    color: #1a252f !important;
+}
+
+/* Logo styles */
+.logo {
+    background: #e6d7ff !important;
+}
+
+.logo img {
+    /* Make white background transparent using blend mode */
+    filter: none !important;
+    mix-blend-mode: multiply !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+/* Ensure text readability */
+.sidebar .nano-content > ul li > a i {
+    color: #3498db !important; /* Blue icons */
+}
+
+.sidebar .nano-content > ul li > a:hover i,
+.sidebar .nano-content > ul li > a:focus i {
+    color: #2980b9 !important; /* Darker blue on hover */
+}
+

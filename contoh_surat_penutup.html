@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contoh Penutup Surat Formal</title>
+    <style>
+        body {
+            font-family: Arial, 'Times New Roman', serif;
+            line-height: 1.6;
+            margin: 40px;
+        }
+        
+        .penutup-surat {
+            margin-top: 60px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+        
+        .ttd-kiri {
+            flex: 1;
+            text-align: left;
+        }
+        
+        .ttd-kanan {
+            flex: 1;
+            text-align: right;
+        }
+        
+        .ttd-item p {
+            margin: 8px 0;
+            font-size: 14px;
+        }
+        
+        .ttd-item .nama-jabatan {
+            margin-top: 40px;
+            font-weight: bold;
+            text-decoration: underline;
+        }
+        
+        /* Alternatif dengan table */
+        .ttd-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 60px;
+        }
+        
+        .ttd-table td {
+            width: 50%;
+            vertical-align: top;
+            padding: 0 20px;
+        }
+        
+        .ttd-table td:first-child {
+            text-align: left;
+        }
+        
+        .ttd-table td:last-child {
+            text-align: right;
+        }
+        
+        .ttd-table .nama-jabatan {
+            margin-top: 40px;
+            font-weight: bold;
+            text-decoration: underline;
+        }
+        
+        @media print {
+            .penutup-surat, .ttd-table {
+                page-break-inside: avoid;
+            }
+        }
+    </style>
+</head>
+<body>
+    
+    <h2>Contoh 1: Menggunakan Flexbox (Modern)</h2>
+    
+    <div class="penutup-surat">
+        <div class="ttd-kiri">
+            <div class="ttd-item">
+                <p>Bandung, 14 Desember 2025</p>
+                <p>Hormat Kami,</p>
+                <p class="nama-jabatan">Admin Keuangan</p>
+            </div>
+        </div>
+        
+        <div class="ttd-kanan">
+            <div class="ttd-item">
+                <p>Menyetujui,</p>
+                <p class="nama-jabatan">Pimpinan</p>
+            </div>
+        </div>
+    </div>
+    
+    <hr style="margin: 40px 0;">
+    
+    <h2>Contoh 2: Menggunakan Table (Klasik & Stabil)</h2>
+    
+    <table class="ttd-table">
+        <tr>
+            <td>
+                <p>Bandung, 14 Desember 2025</p>
+                <p>Hormat Kami,</p>
+                <p class="nama-jabatan">Admin Keuangan</p>
+            </td>
+            <td>
+                <p>Menyetujui,</p>
+                <p class="nama-jabatan">Pimpinan</p>
+            </td>
+        </tr>
+    </table>
+    
+    <hr style="margin: 40px 0;">
+    
+    <h2>Contoh 3: Versi Lengkap untuk Slip Gaji</h2>
+    
+    <div class="penutup-surat">
+        <div class="ttd-kiri">
+            <div class="ttd-item">
+                <p>Bandung, {{ date('d F Y') }}</p>
+                <p>Hormat Kami,</p>
+                <p class="nama-jabatan">Admin Keuangan</p>
+            </div>
+        </div>
+        
+        <div class="ttd-kanan">
+            <div class="ttd-item">
+                <p>Menyetujui,</p>
+                <p class="nama-jabatan">Pimpinan</p>
+            </div>
+        </div>
+    </div>
+    
+    <hr style="margin: 40px 0;">
+    
+    <h2>Cara Penggunaan:</h2>
+    <ul>
+        <li><strong>Flexbox</strong>: Modern, responsive, mudah diatur</li>
+        <li><strong>Table</strong>: Stabil di semua browser, cocok untuk print</li>
+        <li><strong>Margin-top 40px</strong>: Memberi jarak untuk tempat tanda tangan</li>
+        <li><strong>Text-decoration: underline</strong>: Garis bawah untuk nama jabatan</li>
+    </ul>
+    
+</body>
+</html>
