@@ -4,7 +4,7 @@
     Create Admin Account
 @endsection
 @section('content')
-<form method="POST" action="{{ route('register.admin') }}">
+<form method="POST" action="{{ route('register.admin.post') }}">
     @csrf
     <h3 class="text-3xl font-bold text-center mb-6 text-[#3700FF]">Create</h3>
     <div class="mb-4">

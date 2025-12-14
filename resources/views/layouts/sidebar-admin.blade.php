@@ -4,13 +4,14 @@
         <div class="logo"><a href="index.html"><img src="assets/images/logo.png" alt="" width="150" height="auto" /></a></div>
         <ul>
           <li class="label">Master Data</li>
-          <li><a href="{{ url('siswa') }}"><i class="ti-user"></i> Siswa</a></li>
+          <li><a href="{{ url('admin/master-data/siswa') }}"><i class="ti-user"></i> Siswa</a></li>
           <li><a href="{{ url('coa') }}"><i class="ti ti-clipboard"></i> COA </a></li>
           <li><a href="{{ url('pegawai') }}"><i class="ti ti-clipboard"></i> Pegawai</a></li>
-          <li><a href="{{ url('orangtua') }}"><i class="ti-user"></i> Orangtua</a></li>
+          <li><a href="{{ url('admin/master-data/orangtua') }}"><i class="ti-user"></i> Orangtua</a></li>
           <li><a href="{{ url('gaji_jabatan') }}"><i class="ti-user"></i> Gaji dan Jabatan</a></li>
           <li class="label">Transaksi</li>
-          <li><a href="{{ url('pembayaran_siswa') }}"><i class="ti ti-clipboard"></i> Pembayaran Siswa</a></li>
+          <li><a href="{{ url('admin/pembayaran-siswa') }}"><i class="ti ti-clipboard"></i> Pembayaran Siswa</a></li>
+          <li><a href="{{ url('admin/tagihan-siswa') }}"><i class="ti ti-clipboard"></i> Tagihan Siswa</a></li>
           <li><a href="{{ url('presensi') }}"><i class="ti ti-clipboard"></i> Presensi </a></li>
           <li><a href="{{ url('penggajian') }}"><i class="ti ti-clipboard"></i> Penggajian </a></li>
           <li><a href="{{ url('pengeluaran') }}"><i class="ti ti-clipboard"></i> Pengeluaran </a></li>

@@ -4,7 +4,7 @@
     Register Parent Account
 @endsection
 @section('content')
-<form method="POST" action="{{ route('register.parent') }}">
+<form method="POST" action="{{ route('register.parent.post') }}">
     @csrf
     <h3 class="text-3xl font-bold text-center mb-6 text-[#3700FF]">Register</h3>
     <div class="mb-4 relative flex gap-2">

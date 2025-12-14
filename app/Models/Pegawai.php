@@ -2,38 +2,54 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Pegawai extends Model
 {
-    use HasFactory;
-
-    // Nama tabel (karena default Laravel adalah 'pegawais')
     protected $table = 'pegawai';
 
-    // Primary key (karena memakai increments dan bukan bigIncrements)
-    protected $primaryKey = 'id';
-
-    // Kolom yang boleh diisi mass-assignment
     protected $fillable = [
+        'id_user',
         'nip',
         'nama_pegawai',
         'jabatan',
         'email',
         'alamat',
+        'no_telp',
         'is_verified',
+        'id_gaji_jabatan',
     ];
 
-    // Cast tipe data supaya boolean terbaca benar
-    protected $casts = [
-        'is_verified' => 'boolean',
-    ];
-
-    // Contoh relasi (opsional, jika ada tabel lain)
-    // Misalnya: Pegawai memiliki banyak presensi
-    public function presensi()
+        // Relasi ke tabel users
+    public function user()
     {
-        return $this->hasMany(Presensi::class, 'pegawai_id', 'id');
+        return $this->belongsTo(User::class, 'id_user');
     }
+
+    // Relasi ke gaji_jabatan
+    public function gajiJabatan()
+    {
+        return $this->belongsTo(GajiJabatan::class, 'id_gaji_jabatan');
+    }
+
+    // Relasi ke presensi
+    public function presensis()
+    {
+        return $this->hasMany(Presensi::class, 'id_pegawai');
+    }
+
+    // Relasi ke penggajian
+    public function penggajians()
+    {
+        return $this->hasMany(Penggajian::class, 'id_pegawai');
+    }
+    public function hitungKehadiran($periode)
+    {
+        return $this->presensis()
+            ->whereMonth('tanggal', date('m', strtotime($periode)))
+            ->whereYear('tanggal', date('Y', strtotime($periode)))
+            ->where('status', 'hadir')
+            ->count();
+    }
+
 }

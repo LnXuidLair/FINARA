@@ -40,7 +40,7 @@
             </div>
         </div>
     </div>
-    <div class="text-center mt-32 bg-[linear-gradient(to_right,_#EA4FFF_0%,_#F153D7_50%,_#F22090_100%)] bg-clip-text text-transparent drop-shadow-[0_0_15px_rgba(0,0,0,0.5)]">
+   <div class="text-center mt-32 bg-[linear-gradient(to_right,_#EA4FFF_0%,_#F153D7_50%,_#F22090_100%)] bg-clip-text text-transparent drop-shadow-[0_0_15px_rgba(0,0,0,0.5)]">
         <h1 class="text-[72px] font-normal italic">Welcome</h1>
         <h2 class="text-[55px] font-bold -mt-6">Sistem Pembukuan Pendidikan</h2>
     </div>
@@ -107,9 +107,12 @@
         try {
             const res = await fetch("{{ route('verify.code') }}", {
                 method: "POST",
+                credentials: "same-origin",
                 headers: {
-                    "Content-Type":"application/json",
-                    "X-CSRF-TOKEN":"{{ csrf_token() }}"
+                    "Accept": "application/json",
+                    "Content-Type": "application/json",
+                    "X-Requested-With": "XMLHttpRequest",
+                    "X-CSRF-TOKEN": "{{ csrf_token() }}"
                 },
                 body: JSON.stringify({
                     type: window.currentType,
@@ -117,15 +120,32 @@
                 })
             });
 
-            // kalau server return 4xx/5xx, beri pesan juga
-            if (!res.ok) {
-                // coba ambil pesan error dari body (jika ada)
-                let text = await res.text().catch(()=>"");
-                console.error("Non-OK response:", res.status, text);
-                attemptInfo.innerText = `Server error (${res.status}). Try again.`;
+            const contentType = res.headers.get('content-type') || '';
+            let data = null;
+            if (contentType.includes('application/json')) {
+                data = await res.json();
+            } else {
+                const text = await res.text().catch(()=>"");
+                console.error("Non-JSON response:", res.status, text);
+                attemptInfo.innerText = `Server returned non-JSON response (${res.status}). Refresh and try again.`;
                 return;
             }
-            const data = await res.json();
+
+            // kalau server return 4xx/5xx, beri pesan juga
+            if (!res.ok) {
+                if (res.status === 419) {
+                    attemptInfo.innerText = "Session expired (419). Refresh halaman lalu coba lagi.";
+                    return;
+                }
+                if (res.status === 422 && data?.errors) {
+                    const firstKey = Object.keys(data.errors)[0];
+                    const firstMsg = firstKey ? (data.errors[firstKey]?.[0] || "") : "";
+                    attemptInfo.innerText = firstMsg || data.message || `Validasi gagal (${res.status}).`;
+                    return;
+                }
+                attemptInfo.innerText = data?.message || `Server error (${res.status}). Try again.`;
+                return;
+            }
 
             spinner.classList.add("hidden");
             if (data.status === "success") {
@@ -142,6 +162,66 @@
                 setTimeout(()=> {
                     window.location.href = data.redirect;
                 }, 1100);
+                return;
+            }
+            if (data.status === "misconfigured") {
+                attemptInfo.innerText = data.message || "Access code belum dikonfigurasi.";
+                verifyText.innerText = "Verify";
+                input.disabled = false;
+                verifyBtn.disabled = false;
+                input.focus();
+                return;
+            }
+            if (data.status === "already_logged_in") {
+                const currentRole = data.current_role;
+                const requestedType = data.requested_type || window.currentType;
+                const desiredRole = requestedType === 'admin' ? 'admin' : 'pegawai';
+
+                // Kalau role sama, langsung arahkan ke dashboard
+                if (data.redirect && currentRole && currentRole === desiredRole) {
+                    attemptInfo.innerText = "Kamu sudah login. Mengarahkan ke dashboard...";
+                    setTimeout(() => {
+                        window.location.href = data.redirect;
+                    }, 300);
+                    return;
+                }
+
+                // Kalau role beda (mis: masih login sebagai orangtua tapi mau login operator), minta logout dulu
+                const label = requestedType === 'admin' ? 'Operator' : 'Pegawai';
+                attemptInfo.innerText = `Kamu masih login sebagai ${currentRole || 'user'}.`;
+
+                const confirmLogout = confirm(`Kamu masih login sebagai ${currentRole || 'user'}. Logout dulu untuk login ${label}?`);
+                if (confirmLogout && data.logout_url) {
+                    try {
+                        await fetch(data.logout_url, {
+                            method: 'POST',
+                            credentials: 'same-origin',
+                            headers: {
+                                'Accept': 'application/json',
+                                'X-Requested-With': 'XMLHttpRequest',
+                                'X-CSRF-TOKEN': "{{ csrf_token() }}",
+                            },
+                        });
+                    } catch (e) {
+                        console.error('Logout failed', e);
+                    }
+                    // Setelah logout, reload agar session bersih (user bisa klik Login | App lagi)
+                    window.location.reload();
+                    return;
+                }
+
+                // Kalau user tidak mau logout, arahkan saja ke dashboard yg sedang aktif (jika ada)
+                if (data.redirect) {
+                    setTimeout(() => {
+                        window.location.href = data.redirect;
+                    }, 300);
+                    return;
+                }
+
+                verifyText.innerText = "Verify";
+                input.disabled = false;
+                verifyBtn.disabled = false;
+                input.focus();
                 return;
             }
             if (data.status === "error") {

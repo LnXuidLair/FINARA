@@ -2,13 +2,10 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Coa extends Model
 {
-    use HasFactory;
-
     protected $table = 'coa';
 
     protected $fillable = [
@@ -17,9 +14,7 @@ class Coa extends Model
         'nama_akun',
     ];
 
-    /**
-     * Relasi ke JurnalDetail
-     */
+    // Relasi: 1 COA punya banyak jurnal detail
     public function jurnalDetail()
     {
         return $this->hasMany(JurnalDetail::class, 'coa_id');

@@ -17,14 +17,42 @@ class AccessCodeController extends Controller
             'code' => 'required|string|min:6'
         ])->validate();
         if (auth()->check()) {
-            return response()->json(['error'=>'Already logged in'], 403);
+            $user = $request->user();
+
+            $redirect = url('/');
+            if ($user && $user->role === 'admin') {
+                $redirect = route('dashboard');
+            } elseif ($user && $user->role === 'pegawai') {
+                $redirect = url('/dashboard-staff');
+            } elseif ($user && $user->role === 'orangtua') {
+                $redirect = route('parent.dashboard');
+            }
+
+            return response()->json([
+                'status' => 'already_logged_in',
+                'message' => 'You are already logged in.',
+                'redirect' => $redirect,
+                'current_role' => $user?->role,
+                'requested_type' => $request->type,
+                'logout_url' => route('logout'),
+            ], 200);
         }
         $type = $request->type;
-        $code = $request->code;
+        $code = trim((string) $request->code);
         $codes = [
             'admin' => env('ACCESS_CODE_ADMIN'),
             'staff' => env('ACCESS_CODE_STAFF')
         ];
+
+        $expected = $codes[$type] ?? null;
+        if (!is_string($expected) || trim($expected) === '') {
+            return response()->json([
+                'status' => 'misconfigured',
+                'message' => 'Access code is not configured.'
+            ], 200);
+        }
+
+        $expected = trim($expected);
         $ip = $request->ip();
         $attemptKey = "attempts_{$ip}_{$type}";
         $cooldownKey = "cooldown_{$ip}_{$type}";
@@ -36,7 +64,7 @@ class AccessCodeController extends Controller
             ]);
         }
         $attempts = Cache::get($attemptKey, 0);
-        if (isset($codes[$type]) && hash_equals($codes[$type], $code)) {
+        if (hash_equals($expected, $code)) {
             Cache::forget($attemptKey);
             return response()->json([
                 'status' => 'success',

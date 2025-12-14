@@ -18,6 +18,8 @@ return new class extends Migration
             $table->date('tanggal_bayar');
             $table->integer('jumlah');
             $table->string('status_pembayaran');
+            $table->string('order_id')->nullable()->unique();
+            $table->string('snap_token')->nullable();
             $table->foreignId('id_jurnal')->nullable()->constrained('jurnal_umum')->onDelete('set null');
             $table->timestamps();
         });

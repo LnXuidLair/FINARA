@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('gaji_jabatan', function (Blueprint $table) {
             $table->increments('id');
             $table->string('jabatan');
-            $table->integer('gaji_pokok');
+            $table->integer('gaji_perhari');
             $table->timestamps();
         });
     }

@@ -2,38 +2,41 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Siswa extends Model
 {
-    use HasFactory;
-
-    // Nama tabel (karena default Laravel = 'siswas')
     protected $table = 'siswa';
 
-    // Primary key default sudah benar, jadi tidak perlu diubah
-    protected $primaryKey = 'id';
-
-    // Kolom yang dapat diisi mass assignment
     protected $fillable = [
-        'nisn',
         'nama_siswa',
+        'nisn',
         'kelas',
         'alamat',
         'no_telp',
         'id_orangtua',
     ];
 
-    // Relasi: Siswa milik 1 Orangtua
+    // Relasi siswa -> orangtua (banyak siswa milik 1 orangtua)
     public function orangtua()
     {
-        return $this->belongsTo(Orangtua::class, 'id_orangtua', 'id');
+        return $this->belongsTo(OrangTua::class, 'id_orangtua');
     }
 
-    // Relasi tambahan (opsional) jika siswa memiliki pembayaran
-    public function pembayaran()
+    public function pembayaranSiswa()
     {
-        return $this->hasMany(PembayaranSiswa::class, 'id_siswa', 'id');
+        return $this->hasManyThrough(
+            PembayaranSiswa::class,
+            TagihanSiswa::class,
+            'siswa_id', // foreign key on tagihan_siswa table
+            'tagihan_siswa_id', // foreign key on pembayaran_siswa table
+            'id', // local key on siswa table
+            'id' // local key on tagihan_siswa table
+        );
+    }
+
+    public function tagihanSiswa()
+    {
+        return $this->hasMany(TagihanSiswa::class, 'siswa_id');
     }
 }

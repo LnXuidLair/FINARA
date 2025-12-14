@@ -2,36 +2,44 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Orangtua extends Model
+class OrangTua extends Model
 {
-    use HasFactory;
-
-    // Nama tabel karena tidak mengikuti plural default Laravel (orangtuas)
     protected $table = 'orangtua';
 
-    // Kolom yang boleh diisi (mass assignment)
     protected $fillable = [
         'nik',
         'nama_ortu',
+        'email',
         'pekerjaan',
         'alamat',
         'no_telp',
         'gender',
     ];
 
-    // Jika kamu ingin mapping gender lebih mudah
-    public function getJenisKelaminAttribute()
+    // Relasi orangtua -> user
+    public function user()
     {
-        return $this->gender == 1 ? 'Laki-laki' : 'Perempuan';
+        return $this->belongsTo(User::class, 'user_id');
     }
 
-    // Contoh relasi:
-    // Asumsi: seorang orangtua punya banyak siswa (opsional jika ada nanti)
+    // Relasi orangtua -> siswa (1 orangtua punya banyak siswa)
     public function siswa()
     {
-        return $this->hasMany(Siswa::class, 'id_ortu', 'id');
+        return $this->hasMany(Siswa::class, 'id_orangtua');
+    }
+
+    // Relasi untuk mendapatkan tagihan melalui siswa
+    public function tagihanSiswa()
+    {
+        return $this->hasManyThrough(
+            TagihanSiswa::class,
+            Siswa::class,
+            'id_orangtua', // foreign key on siswa table
+            'siswa_id', // foreign key on tagihan_siswa table
+            'id', // local key on orangtua table
+            'id' // local key on siswa table
+        );
     }
 }

@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::create('jurnal_umum', function (Blueprint $table) {
             $table->id();
             $table->date('tgl');
-            $table->string('no_referensi')->nullable();
-            $table->string('deskripsi')->nullable();
+            $table->string('no_referensi');
+            $table->text('deskripsi');
             $table->timestamps();
         });
     }

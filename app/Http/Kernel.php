@@ -65,5 +65,8 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'role' => \App\Http\Middleware\RoleMiddleware::class,
+        'parent' => \App\Http\Middleware\ParentMiddleware::class,
+        'force_parent_password' => \App\Http\Middleware\ForceParentPasswordChange::class,
+        'force_password_change' => \App\Http\Middleware\ForcePasswordChange::class,
     ];
 }

@@ -19,19 +19,13 @@ class JurnalDetail extends Model
         'credit',
     ];
 
-    /**
-     * Relasi ke Jurnal Umum (Many to One)
-     * jurnal_detail.jurnal_id → jurnal_umum.id
-     */
+    // Relasi ke Jurnal Umum
     public function jurnal()
     {
         return $this->belongsTo(JurnalUmum::class, 'jurnal_id');
     }
 
-    /**
-     * Relasi ke COA (Chart of Accounts)
-     * jurnal_detail.coa_id → coa.id
-     */
+    // Relasi ke COA
     public function coa()
     {
         return $this->belongsTo(Coa::class, 'coa_id');

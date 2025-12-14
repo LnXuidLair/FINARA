@@ -2,117 +2,81 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Bahanbaku;
+use App\Models\OrangTua;
+use App\Models\Siswa;
 use Illuminate\Http\Request;
-use App\Http\Requests\StoreBahanbakuRequest;
-use App\Http\Requests\UpdateBahanbakuRequest;
 
-class BahanbakuController extends Controller
+class SiswaController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    public function __construct()
+    {
+        $this->middleware(['auth', 'role:admin,pegawai']);
+    }
+
     public function index()
     {
-        $bahanbaku = Bahanbaku::all();
-        return view('bahanbaku.index', compact('bahanbaku'));
+        $siswa = Siswa::with('orangtua')
+            ->orderBy('nama_siswa')
+            ->paginate(15);
+
+        return view('siswa.index', compact('siswa'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
-    {     
-        return view('bahanbaku.create', ['kode_bahanbaku' => Bahanbaku::generateKodeBahanbaku()]);
+    {
+        $orangtuaList = OrangTua::orderBy('nama_ortu')->pluck('nama_ortu', 'id');
+        return view('siswa.create', compact('orangtuaList'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \App\Http\Requests\StoreBahanbakuRequest  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(StoreBahanbakuRequest $request)
+    public function store(Request $request)
     {
-        // Validasi data
-        $validatedData = $request->validate([
-
-            'nama_bahanbaku' => 'required|string|max:255',
-            'satuan' => 'required|string|max:50',
-            'jumlah' => 'required|numeric|min:0',
+        $validated = $request->validate([
+            'nama_siswa' => 'required|string|max:255',
+            'nisn' => 'required|string|max:10|unique:siswa,nisn',
+            'kelas' => 'required|string|max:50',
+            'alamat' => 'nullable|string',
+            'no_telp' => 'nullable|string|max:20',
+            'id_orangtua' => 'required|exists:orangtua,id',
         ]);
 
-        // Generate kode bahan baku
-        $kodeBahanbaku = Bahanbaku::generateKodeBahanbaku();
+        Siswa::create($validated);
 
-        // Simpan ke database
-        Bahanbaku::create([
-            'kode_bahanbaku' => $kodeBahanbaku,
-            'nama_bahanbaku' => $validatedData['nama_bahanbaku'],
-            'satuan' => $validatedData['satuan'],
-            'jumlah' => $validatedData['jumlah'],
+        return redirect()->route('admin.siswa.index')
+            ->with('success', 'Data siswa berhasil ditambahkan.');
+    }
+
+    public function edit($id)
+    {
+        $siswa = Siswa::with('orangtua')->findOrFail($id);
+        $orangtuaList = OrangTua::orderBy('nama_ortu')->pluck('nama_ortu', 'id');
+        return view('siswa.edit', compact('siswa', 'orangtuaList'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        $siswa = Siswa::findOrFail($id);
+
+        $validated = $request->validate([
+            'nama_siswa' => 'required|string|max:255',
+            'nisn' => 'required|string|max:10|unique:siswa,nisn,' . $siswa->id,
+            'kelas' => 'required|string|max:50',
+            'alamat' => 'nullable|string',
+            'no_telp' => 'nullable|string|max:20',
+            'id_orangtua' => 'required|exists:orangtua,id',
         ]);
 
-        return redirect()->route('bahanbaku.index')->with('success', 'Data bahan baku berhasil ditambahkan!');
+        $siswa->update($validated);
+
+        return redirect()->route('admin.siswa.index')
+            ->with('success', 'Data siswa berhasil diperbarui.');
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Bahanbaku  $bahanbaku
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        $item = Bahanbaku::find($id); // Mendapatkan data dari database
-        return view('bahanbaku.show', compact('item')); // Mengirim $item ke view
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Bahanbaku  $bahanbaku
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Bahanbaku $bahanbaku)
-    {
-        return view('bahanbaku.edit', compact('bahanbaku'));
-    }
-
-    /**
-     * Update the specified resource in storage.
-     * 
-     * @param  \App\Http\Requests\UpdateBahanbakuRequest  $request
-     * @param  \App\Models\Bahanbaku  $bahanbaku
-     * @return \Illuminate\Http\Response
-     */
-    public function update(UpdateBahanbakuRequest $request, Bahanbaku $bahanbaku)
-    {
-        // Validasi data
-        $validatedData = $request->validate([
-            'nama_bahanbaku' => 'required|string|max:255',
-            'satuan' => 'required|string|max:50',
-            'jumlah' => 'required|numeric|min:0',
-        ]);
-
-        // Update data
-        $bahanbaku->update($validatedData);
-
-        return redirect()->route('bahanbaku.index')->with('success', 'Data bahan baku berhasil diperbarui!');
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function destroy($id)
     {
-        // Hapus data bahan baku
-        $bahanbaku = Bahanbaku::findOrFail($id);
-        $bahanbaku->delete();
+        $siswa = Siswa::findOrFail($id);
+        $siswa->delete();
 
-        return redirect()->route('bahanbaku.index')->with('success', 'Data bahan baku berhasil dihapus!');
+        return redirect()->route('admin.siswa.index')
+            ->with('success', 'Data siswa berhasil dihapus.');
     }
 }

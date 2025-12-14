@@ -21,6 +21,7 @@ class CreatepegawaiTable extends Migration
             $table->string('email');
             $table->string('alamat')->nullable();
             $table->boolean('is_verified')->default(false);
+            // Remove foreign key constraint for now
             $table->timestamps();
         });
     }
