@@ -7,36 +7,15 @@ use Illuminate\Database\Eloquent\Model;
 
 class GajiJabatan extends Model
 {
-    use HasFactory;
-
     protected $table = 'gaji_jabatan';
-    protected $primaryKey = 'id';
 
     protected $fillable = [
         'jabatan',
-        'gaji_pokok',
-        'tunjangan',
-        'keterangan',
+        'gaji_perhari',
     ];
 
-    protected $casts = [
-        'gaji_pokok' => 'decimal:2',
-        'tunjangan' => 'decimal:2',
-    ];
-
-    /**
-     * Relasi ke model Pegawai
-     */
-    public function pegawai()
+    public function pegawais()
     {
-        return $this->hasMany(Pegawai::class, 'gaji_jabatan_id');
-    }
-
-    /**
-     * Hitung total gaji (gaji pokok + tunjangan)
-     */
-    public function getTotalGajiAttribute()
-    {
-        return $this->gaji_pokok + $this->tunjangan;
+        return $this->hasMany(Pegawai::class, 'id_gaji_jabatan');
     }
 }

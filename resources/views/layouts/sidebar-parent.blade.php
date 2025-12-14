@@ -1,38 +1,135 @@
-<div class="sidebar sidebar-hide-to-small sidebar-shrink sidebar-gestures">
+<div class="sidebar sidebar-hide-to-small sidebar-shrink sidebar-gestures parent-sidebar">
     <div class="nano">
-      <div class="nano-content">
-        <div class="logo"><a href="index.html"><img src="assets/images/logo.png" alt="" width="150" height="auto" /></a></div>
-        <ul>
-          <li class="label">Master Data</li>
-          <li><a href="{{ url('siswa') }}"><i class="ti-user"></i> Siswa</a></li>
-          <li><a href="{{ url('coa') }}"><i class="ti ti-clipboard"></i> COA </a></li>
-          <li><a href="{{ url('pegawai') }}"><i class="ti ti-clipboard"></i> Pegawai</a></li>
-          <li><a href="{{ url('orangtua') }}"><i class="ti-user"></i> Orangtua</a></li>
-          <li><a href="{{ url('gaji_jabatan') }}"><i class="ti-user"></i> Gaji dan Jabatan</a></li>
-          <li class="label">Transaksi</li>
-          <li><a href="{{ url('pembayaran_siswa') }}"><i class="ti ti-clipboard"></i> Pembayaran Siswa</a></li>
-          <li><a href="{{ url('presensi') }}"><i class="ti ti-clipboard"></i> Presensi </a></li>
-          <li><a href="{{ url('penggajian') }}"><i class="ti ti-clipboard"></i> Penggajian </a></li>
-          <li><a href="{{ url('pengeluaran') }}"><i class="ti ti-clipboard"></i> Pengeluaran </a></li>
-          <li class="label">Form</li>
-          <li><a href="form-basic.html"><i class="ti-view-list-alt"></i> Basic Form </a></li>
-          <li><a href="form-validation.html"><i class="fa fa-list"></i>Form validation</a></li>
-          <li class="label">Extra</li>
-          <li><a class="sidebar-sub-toggle"><i class="ti-files"></i> Invoice <span class="sidebar-collapse-icon ti-angle-down"></span></a>
-            <ul>
-              <li><a href="invoice.html">Basic</a></li>
+        <div class="nano-content">
+
+            <!-- Logo -->
+            <div class="logo text-center py-3">
+                <a href="{{ url('/dashboard-orangtua') }}">
+                    <img src="/assets/images/logo.png" alt="logo" class="sidebar-logo">
+                </a>
+            </div>
+
+            <!-- Menu -->
+            <ul class="sidebar-menu">
+                <li class="menu-label">Dashboard</li>
+                <li class="menu-item">
+                    <a href="{{ url('/dashboard-orangtua') }}">
+                        <i class="ti-home"></i>
+                        <span>Beranda</span>
+                    </a>
+                </li>
+
+                <li class="menu-label">Data Anak</li>
+                <li class="menu-item">
+                    <a href="{{ url('/orangtua/anak') }}">
+                        <i class="ti-user"></i>
+                        <span>Data Anak</span>
+                    </a>
+                </li>
+
+                <li class="menu-item">
+                    <a href="{{ url('/orangtua/tagihan') }}">
+                        <i class="ti-money"></i>
+                        <span>Tagihan Siswa</span>
+                    </a>
+                </li>
+
+                <li class="menu-item">
+                    <a href="{{ url('/parent/tagihan-payment') }}">
+                        <i class="ti-credit-card"></i>
+                        <span>Pembayaran</span>
+                    </a>
+                </li>
+
+                <li class="menu-label">Akun</li>
+                <li class="menu-item logout">
+                    <a href="{{ route('logout') }}"
+                       onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                        <i class="ti-close"></i>
+                        <span>Logout</span>
+                    </a>
+                </li>
             </ul>
-          </li>
-          <li><a class="sidebar-sub-toggle"><i class="ti-target"></i> Pages <span class="sidebar-collapse-icon ti-angle-down"></span></a>
-            <ul>
-              <li><a href="page-login.html">Login</a></li>
-              <li><a href="page-register.html">Register</a></li>
-              <li><a href="page-reset-password.html">Forgot password</a></li>
-               <li><a href="blank.html">blank page</a></li>
-            </ul>
-          </li>
-          <li><a><i class="ti-close"></i> Logout</a></li>
-        </ul>
-      </div>
+
+            <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                @csrf
+            </form>
+
+        </div>
     </div>
-  </div>
+</div>
+
+/* ===== SIDEBAR ORANG TUA ===== */
+.parent-sidebar {
+    width: 260px;
+    background: linear-gradient(180deg, #6D28D9, #7C3AED);
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    z-index: 1000;
+}
+
+/* Logo */
+.sidebar-logo {
+    max-width: 150px;
+}
+
+/* Menu */
+.sidebar-menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.menu-label {
+    padding: 12px 24px;
+    font-size: 12px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.6);
+    letter-spacing: 0.05em;
+}
+
+.menu-item a {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 24px;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 8px;
+    margin: 4px 12px;
+    transition: all 0.2s ease;
+}
+
+.menu-item a i {
+    font-size: 16px;
+    min-width: 20px;
+}
+
+/* Hover */
+.menu-item a:hover {
+    background: rgba(255,255,255,0.15);
+}
+
+/* Active (optional kalau mau pakai) */
+.menu-item.active a {
+    background: rgba(255,255,255,0.25);
+    font-weight: 600;
+}
+
+/* Logout beda warna dikit */
+.menu-item.logout a {
+    color: #FEE2E2;
+}
+
+.menu-item.logout a:hover {
+    background: rgba(239,68,68,0.25);
+}
+
+/* Mobile */
+@media (max-width: 991.98px) {
+    .parent-sidebar {
+        left: -260px;
+    }
+}

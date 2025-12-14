@@ -84,7 +84,15 @@ class RegisterController extends Controller
             return back()->withErrors(['nisn' => 'Siswa sudah memiliki akun orangtua']);
         }
 
+        $user = User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => bcrypt($request->password),
+            'role' => 'orangtua'
+        ]);
+
         $ortu = Orangtua::create([
+            'id_user' => $user->id,
             'nik' => 'TEMP-' . rand(100000, 999999),
             'nama_ortu' => $request->name,
             'pekerjaan' => '-',
@@ -93,13 +101,6 @@ class RegisterController extends Controller
 
         $siswa->update([
             'id_orangtua' => $ortu->id
-        ]);
-
-        User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => bcrypt($request->password),
-            'role' => 'orangtua'
         ]);
 
         return redirect()->route('login.parent');

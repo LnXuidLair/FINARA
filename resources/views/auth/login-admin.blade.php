@@ -13,9 +13,6 @@
     <div class="mb-4">
         <input type="password" name="password" placeholder="Password" class="w-full px-4 py-3 rounded-xl border border-[#1A237E] bg-[#4CC0FF] placeholder-[#1A237E] font-semibold text-[#1A237E]" required>
     </div>
-    <div class="mb-4">
-        <input type="text" name="acces_code" placeholder="Access Code" class="w-full px-4 py-3 rounded-xl border border-[#1A237E] bg-[#4CC0FF] placeholder-[#1A237E] font-semibold text-[#1A237E]"required >
-    </div>
     <div class="flex justify-between items-center text-[#1A237E] font-semibold text-sm mb-3">
         <label class="flex items-center space-x-2">
             <input type="checkbox" name="remember" class="w-6 h-6 rounded border-[#1A237E] bg-[#4CC0FF]">

@@ -20,6 +20,32 @@ class Penggajian extends Model
         'jumlah_kehadiran',
     ];
 
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($penggajian) {
+
+            // === 1. Ambil otomatis gaji per hari dari gaji_jabatan ===
+            if (empty($penggajian->gaji_perhari)) {
+                $penggajian->gaji_perhari =
+                    $penggajian->pegawai->gajiJabatan->gaji_perhari ?? 0;
+            }
+
+            // === 2. Hitung jumlah kehadiran otomatis dari tabel presensi ===
+            if (empty($penggajian->jumlah_kehadiran)) {
+                $penggajian->jumlah_kehadiran =
+                    $penggajian->pegawai->hitungKehadiran($penggajian->periode);
+            }
+
+            // === 3. Hitung total gaji otomatis ===
+            if (empty($penggajian->total_gaji)) {
+                $penggajian->total_gaji =
+                    $penggajian->gaji_perhari * $penggajian->jumlah_kehadiran;
+            }
+        });
+    }
+
     public function pegawai()
     {
         return $this->belongsTo(Pegawai::class, 'id_pegawai');

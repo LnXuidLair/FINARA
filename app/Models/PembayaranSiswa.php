@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Schema;
 
 class PembayaranSiswa extends Model
 {
@@ -17,12 +18,13 @@ class PembayaranSiswa extends Model
         'tanggal_bayar',
         'jumlah',
         'status_pembayaran',
+        'order_id',
+        'snap_token',
         'id_jurnal',
     ];
 
     /**
      * Relasi ke Siswa
-     * pembayaran_siswa.id_siswa → siswa.id
      */
     public function siswa()
     {
@@ -30,11 +32,24 @@ class PembayaranSiswa extends Model
     }
 
     /**
-     * Relasi ke Jurnal Umum
-     * pembayaran_siswa.id_jurnal → jurnal_umum.id
+     * Relasi ke TagihanSiswa melalui pivot table
      */
-    public function jurnal()
+    public function tagihanSiswa()
     {
-        return $this->belongsTo(JurnalUmum::class, 'id_jurnal');
+        if (Schema::hasTable('tagihan_siswa_pembayaran')) {
+            return $this->belongsToMany(
+                TagihanSiswa::class,
+                'tagihan_siswa_pembayaran',
+                'pembayaran_siswa_id',
+                'tagihan_siswa_id'
+            );
+        }
+
+        if (Schema::hasColumn($this->getTable(), 'tagihan_siswa_id')) {
+            return $this->belongsTo(TagihanSiswa::class, 'tagihan_siswa_id');
+        }
+
+        return $this->belongsTo(TagihanSiswa::class, 'id_siswa', 'siswa_id')
+            ->whereRaw('1=0');
     }
 }
